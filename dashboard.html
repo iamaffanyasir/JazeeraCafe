@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jazeera Cafe & Restaurant - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #f8fafc;
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            margin-bottom: 35px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            border: 1px solid #e2e8f0;
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.4em;
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .dashboard-header h2 {
+            color: #64748b;
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+        }
+
+        .stat-card h4 {
+            color: #64748b;
+            font-size: 0.95em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 15px;
+        }
+
+        .stat-card .value {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .tables-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            padding: 0;
+        }
+
+        .table-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .table-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+        }
+
+        .table-card h3 {
+            font-size: 1.4em;
+            color: #1e293b;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .table-info {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .table-status {
+            display: inline-flex;
+            align-items: center;
+            padding: 10px 16px;
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-weight: 500;
+            background: #f0fdf4;
+            color: #166534;
+            transition: all 0.3s ease;
+        }
+
+        .table-status::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 10px;
+            background-color: #22c55e;
+            transition: all 0.3s ease;
+        }
+
+        .table-status.occupied {
+            background: #fef2f2;
+            color: #991b1b;
+        }
+
+        .table-status.occupied::before {
+            background-color: #ef4444;
+        }
+
+        .table-card.occupied {
+            border-left: 4px solid #ef4444;
+        }
+
+        .time-info {
+            font-size: 0.9em;
+            color: #64748b;
+            margin-top: 5px;
+        }
+
+        .bill-amount {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1e293b;
+            padding: 10px 16px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            margin-top: 8px;
+        }
+
+        .reset-revenue {
+            margin-top: 15px;
+            padding: 10px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .reset-revenue:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .stat-card.clickable {
+            cursor: pointer;
+        }
+
+        .stat-card.clickable:hover {
+            border-color: #2563eb;
+        }
+
+        @media (max-width: 1400px) {
+            .dashboard-stats, .tables-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .dashboard-stats, .tables-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .dashboard-stats, .tables-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+            }
+            
+            .dashboard-header {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="dashboard-header">
+            <h1>Jazeera Cafe & Restaurant</h1>
+            <h2>Table Management Dashboard</h2>
+        </div>
+
+        <div class="dashboard-stats">
+            <div class="stat-card">
+                <h4>Active Tables</h4>
+                <div class="value" id="active-tables">0</div>
+            </div>
+            <div class="stat-card">
+                <h4>Available Tables</h4>
+                <div class="value" id="available-tables">12</div>
+            </div>
+            <div class="stat-card">
+                <h4>Total Orders</h4>
+                <div class="value" id="total-orders">0</div>
+            </div>
+            <div class="stat-card clickable" onclick="window.location.href='revenue.html'">
+                <h4>Total Revenue</h4>
+                <div class="value" id="total-revenue">₹0.00</div>
+                <button class="reset-revenue" onclick="event.stopPropagation(); resetRevenue()">Reset Revenue</button>
+            </div>
+        </div>
+
+        <div class="tables-grid">
+            <!-- Table 1 -->
+            <div class="table-card" onclick="openTable(1)" data-table="1">
+                <h3>Table 1</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-1">Available</div>
+                    <div class="bill-amount" id="bill-1"></div>
+                    <div class="time-info" id="time-1"></div>
+                </div>
+            </div>
+
+            <!-- Table 2 -->
+            <div class="table-card" onclick="openTable(2)" data-table="2">
+                <h3>Table 2</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-2">Available</div>
+                    <div class="bill-amount" id="bill-2"></div>
+                    <div class="time-info" id="time-2"></div>
+                </div>
+            </div>
+
+            <!-- Table 3 -->
+            <div class="table-card" onclick="openTable(3)" data-table="3">
+                <h3>Table 3</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-3">Available</div>
+                    <div class="bill-amount" id="bill-3"></div>
+                    <div class="time-info" id="time-3"></div>
+                </div>
+            </div>
+
+            <!-- Table 4 -->
+            <div class="table-card" onclick="openTable(4)" data-table="4">
+                <h3>Table 4</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-4">Available</div>
+                    <div class="bill-amount" id="bill-4"></div>
+                    <div class="time-info" id="time-4"></div>
+                </div>
+            </div>
+
+            <!-- Table 5 -->
+            <div class="table-card" onclick="openTable(5)" data-table="5">
+                <h3>Table 5</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-5">Available</div>
+                    <div class="bill-amount" id="bill-5"></div>
+                    <div class="time-info" id="time-5"></div>
+                </div>
+            </div>
+
+            <!-- Table 6 -->
+            <div class="table-card" onclick="openTable(6)" data-table="6">
+                <h3>Table 6</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-6">Available</div>
+                    <div class="bill-amount" id="bill-6"></div>
+                    <div class="time-info" id="time-6"></div>
+                </div>
+            </div>
+
+            <!-- Table 7 -->
+            <div class="table-card" onclick="openTable(7)" data-table="7">
+                <h3>Table 7</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-7">Available</div>
+                    <div class="bill-amount" id="bill-7"></div>
+                    <div class="time-info" id="time-7"></div>
+                </div>
+            </div>
+
+            <!-- Table 8 -->
+            <div class="table-card" onclick="openTable(8)" data-table="8">
+                <h3>Table 8</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-8">Available</div>
+                    <div class="bill-amount" id="bill-8"></div>
+                    <div class="time-info" id="time-8"></div>
+                </div>
+            </div>
+
+            <!-- Table 9 -->
+            <div class="table-card" onclick="openTable(9)" data-table="9">
+                <h3>Table 9</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-9">Available</div>
+                    <div class="bill-amount" id="bill-9"></div>
+                    <div class="time-info" id="time-9"></div>
+                </div>
+            </div>
+
+            <!-- Table 10 -->
+            <div class="table-card" onclick="openTable(10)" data-table="10">
+                <h3>Table 10</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-10">Available</div>
+                    <div class="bill-amount" id="bill-10"></div>
+                    <div class="time-info" id="time-10"></div>
+                </div>
+            </div>
+
+            <!-- Table 11 -->
+            <div class="table-card" onclick="openTable(11)" data-table="11">
+                <h3>Table 11</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-11">Available</div>
+                    <div class="bill-amount" id="bill-11"></div>
+                    <div class="time-info" id="time-11"></div>
+                </div>
+            </div>
+
+            <!-- Table 12 -->
+            <div class="table-card" onclick="openTable(12)" data-table="12">
+                <h3>Table 12</h3>
+                <div class="table-info">
+                    <div class="table-status" id="status-12">Available</div>
+                    <div class="bill-amount" id="bill-12"></div>
+                    <div class="time-info" id="time-12"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        Copyright © 2024 - Built by <a href="https://visualter.vercel.app/" target="_blank">Visualters</a>
+    </footer>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>

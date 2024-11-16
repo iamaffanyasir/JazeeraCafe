@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Table 10 - Jazeera Cafe & Restaurant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8fafc;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: #1e293b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background-color: #334155;
+            transform: translateX(-2px);
+        }
+
+        .table-content {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .order-section {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+        }
+
+        .menu-section {
+            border-right: 1px solid #e2e8f0;
+            padding-right: 30px;
+            max-height: calc(100vh - 200px);
+            overflow-y: auto;
+        }
+
+        .menu-section h3 {
+            font-size: 1.5rem;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .category-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .category-tab {
+            padding: 10px 20px;
+            border-radius: 25px;
+            background-color: #f1f5f9;
+            color: #64748b;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            border: none;
+        }
+
+        .category-tab:hover {
+            background-color: #e2e8f0;
+            color: #1e293b;
+        }
+
+        .category-tab.active {
+            background-color: #1e293b;
+            color: white;
+        }
+
+        .menu-items {
+            display: grid;
+            gap: 15px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .menu-item:hover {
+            border-color: #94a3b8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-details h4 {
+            font-size: 1.1rem;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+
+        .item-price {
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background-color: #f8fafc;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .quantity-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background-color: #e2e8f0;
+            color: #1e293b;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .quantity-btn:hover {
+            background-color: #1e293b;
+            color: white;
+        }
+
+        .quantity-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+        .bill-section {
+            background-color: #f8fafc;
+            border-radius: 16px;
+            padding: 25px;
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .bill-section h3 {
+            font-size: 1.3rem;
+            color: #1e293b;
+            margin-bottom: 20px;
+        }
+
+        .selected-items {
+            margin-top: 20px;
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .selected-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .selected-item-name {
+            font-weight: 500;
+            color: #1e293b;
+        }
+
+        .bill-total {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        .bill-row.total {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #1e293b;
+            margin-top: 10px;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .clear-bill, .mark-paid {
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .clear-bill {
+            background-color: #ef4444;
+            color: white;
+        }
+
+        .mark-paid {
+            background-color: #22c55e;
+            color: white;
+        }
+
+        .clear-bill:hover {
+            background-color: #dc2626;
+            transform: translateY(-2px);
+        }
+
+        .mark-paid:hover {
+            background-color: #16a34a;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 1024px) {
+            .order-section {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .menu-section {
+                border-right: none;
+                padding-right: 0;
+            }
+        }
+
+        /* Modern Scrollbar Styles */
+        .menu-section::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .menu-section::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 10px;
+            margin: 5px;
+        }
+
+        .menu-section::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .menu-section::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .selected-items::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .selected-items::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 10px;
+            margin: 5px;
+        }
+
+        .selected-items::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .selected-items::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .category-tabs::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .category-tabs::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 10px;
+            margin: 5px;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        .category-tabs::-webkit-scrollbar-thumb:hover {
+            background: #64748b;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+        }
+
+        /* Firefox scrollbar styles */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #94a3b8 transparent;
+        }
+
+        /* Hide scrollbar when not hovering */
+        .menu-section, .selected-items, .category-tabs {
+            transition: all 0.3s ease;
+        }
+
+        .menu-section:hover, .selected-items:hover, .category-tabs:hover {
+            scrollbar-width: thin;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="table-header">
+            <button class="back-button" onclick="window.location.href='dashboard.html'">
+                ← Back to Dashboard
+            </button>
+            <h1>Table 10</h1>
+        </div>
+
+        <div class="table-content">
+            <div class="order-section">
+                <div class="menu-section">
+                    <h3>Menu</h3>
+                    <div class="category-tabs">
+                        <div class="category-tab active" onclick="filterCategory('all')">All Items</div>
+                        <div class="category-tab" onclick="filterCategory('Cafe - Beverages')">Beverages</div>
+                        <div class="category-tab" onclick="filterCategory('Cafe - Quick Bites')">Quick Bites</div>
+                        <div class="category-tab" onclick="filterCategory('Cafe - Parathas')">Parathas</div>
+                        <div class="category-tab" onclick="filterCategory('Cafe - Breakfast')">Breakfast</div>
+                        <div class="category-tab" onclick="filterCategory('Restaurant')">Restaurant</div>
+                    </div>
+                    <div id="menuItems" class="menu-items">
+                        <!-- Menu items will be populated here -->
+                    </div>
+                </div>
+
+                <div class="bill-section">
+                    <h3>Current Order</h3>
+                    <div id="selectedItems" class="selected-items">
+                        <!-- Selected items will appear here -->
+                    </div>
+                    <div class="bill-total">
+                        <div class="bill-row total">
+                            <span>Total Amount</span>
+                            <span id="total">₹0.00</span>
+                        </div>
+                    </div>
+                    <div class="button-group">
+                        <button class="clear-bill" onclick="clearBill()">Clear Bill</button>
+                        <button class="mark-paid" onclick="markAsPaid()">Mark as Paid</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="table10.js"></script>
+</body>
+</html> 
